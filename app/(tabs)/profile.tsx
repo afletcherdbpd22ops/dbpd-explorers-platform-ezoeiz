@@ -109,7 +109,8 @@ export default function ProfileScreen() {
 
   const getRankColor = (rank: string) => {
     switch (rank.toLowerCase()) {
-      case 'explorer major': return '#8B0000'; // Dark red for highest rank
+      case 'advisor': return '#000080'; // Navy blue for advisors (police officers)
+      case 'explorer major': return '#8B0000'; // Dark red for highest explorer rank
       case 'explorer captain': return '#FF4500'; // Orange red
       case 'explorer lieutenant': return colors.primary; // Blue
       case 'explorer sergeant': return '#32CD32'; // Lime green
@@ -179,7 +180,9 @@ export default function ProfileScreen() {
           <View style={styles.profileImageContainer}>
             <IconSymbol name="person.circle.fill" size={80} color={colors.primary} />
             <View style={[styles.rankBadge, { backgroundColor: getRankColor(explorerProfile.rank) }]}>
-              <Text style={styles.rankBadgeText}>{explorerProfile.rank.split(' ')[1] || 'EXP'}</Text>
+              <Text style={styles.rankBadgeText}>
+                {explorerProfile.rank === 'Advisor' ? 'ADV' : explorerProfile.rank.split(' ')[1] || 'EXP'}
+              </Text>
             </View>
           </View>
           <Text style={[styles.profileName, { color: colors.text }]}>
@@ -187,6 +190,11 @@ export default function ProfileScreen() {
           </Text>
           <Text style={[styles.profileRank, { color: getRankColor(explorerProfile.rank) }]}>
             {explorerProfile.rank}
+            {explorerProfile.rank === 'Advisor' && (
+              <Text style={[styles.advisorNote, { color: colors.textSecondary }]}>
+                {' '}(Police Officer)
+              </Text>
+            )}
           </Text>
           <Text style={[styles.badgeNumber, { color: colors.textSecondary }]}>
             Badge #{explorerProfile.badgeNumber}
@@ -199,15 +207,17 @@ export default function ProfileScreen() {
 
         {/* Stats Cards */}
         <View style={styles.statsContainer}>
-          <View style={[commonStyles.card, styles.statCard]}>
-            <IconSymbol name="heart.fill" color={colors.success} size={32} />
-            <Text style={[styles.statNumber, { color: colors.text }]}>
-              {explorerProfile.communityServiceHours}
-            </Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Service Hours
-            </Text>
-          </View>
+          {explorerProfile.rank !== 'Advisor' && (
+            <View style={[commonStyles.card, styles.statCard]}>
+              <IconSymbol name="heart.fill" color={colors.success} size={32} />
+              <Text style={[styles.statNumber, { color: colors.text }]}>
+                {explorerProfile.communityServiceHours}
+              </Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
+                Service Hours
+              </Text>
+            </View>
+          )}
           <View style={[commonStyles.card, styles.statCard]}>
             <IconSymbol name="book.fill" color={colors.primary} size={32} />
             <Text style={[styles.statNumber, { color: colors.text }]}>
@@ -236,7 +246,9 @@ export default function ProfileScreen() {
           <View style={styles.infoRow}>
             <IconSymbol name="calendar" color={colors.textSecondary} size={20} />
             <View style={styles.infoContent}>
-              <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>Join Date</Text>
+              <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>
+                {explorerProfile.rank === 'Advisor' ? 'Start Date' : 'Join Date'}
+              </Text>
               <Text style={[styles.infoValue, { color: colors.text }]}>
                 {formatDate(explorerProfile.joinDate)}
               </Text>
@@ -265,7 +277,7 @@ export default function ProfileScreen() {
         {/* Specializations */}
         <View style={[commonStyles.card, styles.specializationsSection]}>
           <Text style={[commonStyles.subtitle, { color: colors.text, marginBottom: 16 }]}>
-            Specializations
+            {explorerProfile.rank === 'Advisor' ? 'Areas of Expertise' : 'Specializations'}
           </Text>
           <View style={styles.specializationsList}>
             {explorerProfile.specializations.map((specialization, index) => (
@@ -398,6 +410,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 4,
+  },
+  advisorNote: {
+    fontSize: 12,
+    fontWeight: '400',
+    fontStyle: 'italic',
   },
   badgeNumber: {
     fontSize: 14,

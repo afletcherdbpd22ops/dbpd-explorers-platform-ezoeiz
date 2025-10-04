@@ -28,6 +28,30 @@ export default function RosterScreen() {
   const explorers: Explorer[] = [
     {
       id: '1',
+      name: 'Officer Sarah Martinez',
+      rank: 'Advisor',
+      badgeNumber: 'DBPD-2019-045',
+      status: 'active',
+      joinDate: '2019-06-15',
+      communityServiceHours: 0, // Advisors don't track community service hours
+      phone: '(386) 671-5100',
+      email: 'smartinez@daytonabeach.org',
+      specializations: ['Program Leadership', 'Training Coordination', 'Youth Development'],
+    },
+    {
+      id: '2',
+      name: 'Officer Michael Rodriguez',
+      rank: 'Advisor',
+      badgeNumber: 'DBPD-2021-032',
+      status: 'active',
+      joinDate: '2021-03-22',
+      communityServiceHours: 0,
+      phone: '(386) 671-5101',
+      email: 'mrodriguez@daytonabeach.org',
+      specializations: ['Emergency Response Training', 'Community Relations'],
+    },
+    {
+      id: '3',
       name: 'Alex Johnson',
       rank: 'Explorer Lieutenant',
       badgeNumber: 'EX-2024-015',
@@ -39,7 +63,7 @@ export default function RosterScreen() {
       specializations: ['Traffic Control', 'Community Outreach'],
     },
     {
-      id: '2',
+      id: '4',
       name: 'Sarah Martinez',
       rank: 'Explorer Major',
       badgeNumber: 'EX-2022-003',
@@ -51,7 +75,7 @@ export default function RosterScreen() {
       specializations: ['Emergency Response', 'Leadership', 'Training'],
     },
     {
-      id: '3',
+      id: '5',
       name: 'Michael Chen',
       rank: 'Explorer Captain',
       badgeNumber: 'EX-2022-007',
@@ -63,7 +87,7 @@ export default function RosterScreen() {
       specializations: ['Traffic Control', 'Emergency Response'],
     },
     {
-      id: '4',
+      id: '6',
       name: 'Emma Thompson',
       rank: 'Explorer Sergeant',
       badgeNumber: 'EX-2023-012',
@@ -75,7 +99,7 @@ export default function RosterScreen() {
       specializations: ['Community Outreach'],
     },
     {
-      id: '5',
+      id: '7',
       name: 'David Rodriguez',
       rank: 'Explorer Corporal',
       badgeNumber: 'EX-2023-018',
@@ -87,7 +111,7 @@ export default function RosterScreen() {
       specializations: ['Traffic Control'],
     },
     {
-      id: '6',
+      id: '8',
       name: 'Jessica Williams',
       rank: 'Explorer',
       badgeNumber: 'EX-2024-021',
@@ -99,7 +123,7 @@ export default function RosterScreen() {
       specializations: [],
     },
     {
-      id: '7',
+      id: '9',
       name: 'Ryan Davis',
       rank: 'Explorer',
       badgeNumber: 'EX-2024-025',
@@ -111,7 +135,7 @@ export default function RosterScreen() {
       specializations: [],
     },
     {
-      id: '8',
+      id: '10',
       name: 'Ashley Brown',
       rank: 'Explorer Corporal',
       badgeNumber: 'EX-2021-005',
@@ -123,7 +147,7 @@ export default function RosterScreen() {
       specializations: ['Community Outreach', 'Training'],
     },
     {
-      id: '9',
+      id: '11',
       name: 'James Wilson',
       rank: 'Explorer',
       badgeNumber: 'EX-2023-008',
@@ -138,7 +162,8 @@ export default function RosterScreen() {
 
   const getRankColor = (rank: string) => {
     switch (rank.toLowerCase()) {
-      case 'explorer major': return '#8B0000'; // Dark red for highest rank
+      case 'advisor': return '#000080'; // Navy blue for advisors (police officers)
+      case 'explorer major': return '#8B0000'; // Dark red for highest explorer rank
       case 'explorer captain': return '#FF4500'; // Orange red
       case 'explorer lieutenant': return colors.primary; // Blue
       case 'explorer sergeant': return '#32CD32'; // Lime green
@@ -239,6 +264,11 @@ export default function RosterScreen() {
           </View>
           <Text style={[styles.explorerRank, { color: getRankColor(explorer.rank) }]}>
             {explorer.rank}
+            {explorer.rank === 'Advisor' && (
+              <Text style={[styles.advisorNote, { color: colors.textSecondary }]}>
+                {' '}(Police Officer)
+              </Text>
+            )}
           </Text>
           <Text style={[styles.badgeNumber, { color: colors.textSecondary }]}>
             Badge #{explorer.badgeNumber}
@@ -254,12 +284,14 @@ export default function RosterScreen() {
           </Text>
         </View>
         
-        <View style={styles.detailRow}>
-          <IconSymbol name="heart.fill" color={colors.success} size={16} />
-          <Text style={[styles.detailText, { color: colors.textSecondary }]}>
-            Service Hours: {explorer.communityServiceHours}
-          </Text>
-        </View>
+        {explorer.rank !== 'Advisor' && (
+          <View style={styles.detailRow}>
+            <IconSymbol name="heart.fill" color={colors.success} size={16} />
+            <Text style={[styles.detailText, { color: colors.textSecondary }]}>
+              Service Hours: {explorer.communityServiceHours}
+            </Text>
+          </View>
+        )}
         
         <View style={styles.detailRow}>
           <IconSymbol name="phone.fill" color={colors.textSecondary} size={16} />
@@ -595,6 +627,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 4,
+  },
+  advisorNote: {
+    fontSize: 12,
+    fontWeight: '400',
+    fontStyle: 'italic',
   },
   badgeNumber: {
     fontSize: 14,
