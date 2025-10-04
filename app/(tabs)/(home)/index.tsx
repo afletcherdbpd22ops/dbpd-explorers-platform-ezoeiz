@@ -148,7 +148,7 @@ export default function HomeScreen() {
         {/* Welcome Section */}
         <View style={styles.welcomeSection}>
           <Text style={[commonStyles.title, { color: colors.text }]}>
-            Welcome, Explorer!
+            Daytona Beach Police Explorers
           </Text>
           <Text style={[commonStyles.textSecondary, { textAlign: 'center' }]}>
             Ready to serve and protect our community

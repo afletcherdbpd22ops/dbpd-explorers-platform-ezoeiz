@@ -22,6 +22,12 @@ export default function TabLayout() {
       label: 'Calendar',
     },
     {
+      name: 'roster',
+      route: '/(tabs)/roster',
+      icon: 'person.3.fill',
+      label: 'Roster',
+    },
+    {
       name: 'announcements',
       route: '/(tabs)/announcements',
       icon: 'megaphone.fill',
@@ -59,6 +65,10 @@ export default function TabLayout() {
           <Icon sf="calendar" drawable="ic_calendar" />
           <Label>Calendar</Label>
         </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="roster">
+          <Icon sf="person.3.fill" drawable="ic_roster" />
+          <Label>Roster</Label>
+        </NativeTabs.Trigger>
         <NativeTabs.Trigger name="announcements">
           <Icon sf="megaphone.fill" drawable="ic_announcements" />
           <Label>Announcements</Label>
@@ -90,6 +100,7 @@ export default function TabLayout() {
       >
         <Stack.Screen name="(home)" />
         <Stack.Screen name="calendar" />
+        <Stack.Screen name="roster" />
         <Stack.Screen name="announcements" />
         <Stack.Screen name="messages" />
         <Stack.Screen name="walkie" />

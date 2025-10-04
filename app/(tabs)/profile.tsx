@@ -27,7 +27,7 @@ export default function ProfileScreen() {
   const [explorerProfile] = useState<ExplorerProfile>({
     id: '1',
     name: 'Alex Johnson',
-    rank: 'Senior Explorer',
+    rank: 'Explorer Lieutenant',
     badgeNumber: 'EX-2024-015',
     joinDate: '2023-03-15',
     communityServiceHours: 127,
@@ -109,9 +109,12 @@ export default function ProfileScreen() {
 
   const getRankColor = (rank: string) => {
     switch (rank.toLowerCase()) {
-      case 'senior explorer': return colors.primary;
-      case 'explorer': return colors.secondary;
-      case 'cadet explorer': return colors.accent;
+      case 'explorer major': return '#8B0000'; // Dark red for highest rank
+      case 'explorer captain': return '#FF4500'; // Orange red
+      case 'explorer lieutenant': return colors.primary; // Blue
+      case 'explorer sergeant': return '#32CD32'; // Lime green
+      case 'explorer corporal': return '#FFD700'; // Gold
+      case 'explorer': return colors.secondary; // Default secondary color
       default: return colors.textSecondary;
     }
   };
@@ -176,7 +179,7 @@ export default function ProfileScreen() {
           <View style={styles.profileImageContainer}>
             <IconSymbol name="person.circle.fill" size={80} color={colors.primary} />
             <View style={[styles.rankBadge, { backgroundColor: getRankColor(explorerProfile.rank) }]}>
-              <Text style={styles.rankBadgeText}>{explorerProfile.rank.split(' ')[0]}</Text>
+              <Text style={styles.rankBadgeText}>{explorerProfile.rank.split(' ')[1] || 'EXP'}</Text>
             </View>
           </View>
           <Text style={[styles.profileName, { color: colors.text }]}>
