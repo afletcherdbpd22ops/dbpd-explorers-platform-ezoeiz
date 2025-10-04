@@ -23,20 +23,23 @@ interface Conversation {
   unreadCount: number;
   isGroup: boolean;
   avatar?: string;
+  participants?: string[];
 }
 
 export default function MessagesScreen() {
   const [activeConversation, setActiveConversation] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState('');
 
+  // Explorer group chat is always first and includes all registered users
   const conversations: Conversation[] = [
     {
-      id: '1',
-      name: 'Explorer Team Alpha',
-      lastMessage: 'Ready for tonight\'s patrol',
-      timestamp: '2024-01-14T15:30:00Z',
-      unreadCount: 2,
+      id: 'explorer-group',
+      name: 'Explorer Group Chat',
+      lastMessage: 'Welcome to the Explorer team! Ready to serve as professional public servants.',
+      timestamp: '2024-01-14T16:00:00Z',
+      unreadCount: 3,
       isGroup: true,
+      participants: ['All Registered Explorers'],
     },
     {
       id: '2',
@@ -48,54 +51,86 @@ export default function MessagesScreen() {
     },
     {
       id: '3',
-      name: 'Training Group',
-      lastMessage: 'Don\'t forget tomorrow\'s session',
-      timestamp: '2024-01-14T12:45:00Z',
+      name: 'Sarah Martinez',
+      lastMessage: 'Training session went well today',
+      timestamp: '2024-01-14T13:30:00Z',
       unreadCount: 1,
-      isGroup: true,
+      isGroup: false,
     },
     {
       id: '4',
-      name: 'Sergeant Martinez',
+      name: 'Michael Chen',
       lastMessage: 'Equipment check completed',
-      timestamp: '2024-01-14T10:20:00Z',
+      timestamp: '2024-01-14T12:45:00Z',
+      unreadCount: 0,
+      isGroup: false,
+    },
+    {
+      id: '5',
+      name: 'Emma Thompson',
+      lastMessage: 'See you at tonight\'s patrol',
+      timestamp: '2024-01-14T11:20:00Z',
       unreadCount: 0,
       isGroup: false,
     },
   ];
 
   const messages: { [key: string]: Message[] } = {
-    '1': [
+    'explorer-group': [
       {
         id: '1',
-        sender: 'Explorer Mike',
-        content: 'Everyone ready for tonight\'s patrol?',
-        timestamp: '2024-01-14T15:00:00Z',
+        sender: 'System',
+        content: 'Welcome to the Explorer Group Chat! All registered explorers are automatically added to this group.',
+        timestamp: '2024-01-14T08:00:00Z',
+        isCurrentUser: false,
+        type: 'system',
+      },
+      {
+        id: '2',
+        sender: 'Sarah Martinez',
+        content: 'Welcome everyone! Remember, we are professional public servants dedicated to serving our community.',
+        timestamp: '2024-01-14T08:15:00Z',
         isCurrentUser: false,
         type: 'text',
       },
       {
-        id: '2',
+        id: '3',
+        sender: 'Michael Chen',
+        content: 'Looking forward to working with everyone. Let\'s make a positive impact!',
+        timestamp: '2024-01-14T08:30:00Z',
+        isCurrentUser: false,
+        type: 'text',
+      },
+      {
+        id: '4',
         sender: 'You',
-        content: 'Yes, I\'ll be there at 1800 hours',
-        timestamp: '2024-01-14T15:15:00Z',
+        content: 'Excited to be part of the team and serve as a professional public servant!',
+        timestamp: '2024-01-14T09:00:00Z',
         isCurrentUser: true,
         type: 'text',
       },
       {
-        id: '3',
-        sender: 'Explorer Sarah',
-        content: 'Ready for tonight\'s patrol',
-        timestamp: '2024-01-14T15:30:00Z',
+        id: '5',
+        sender: 'Emma Thompson',
+        content: 'Don\'t forget tonight\'s community patrol at 1800 hours.',
+        timestamp: '2024-01-14T15:45:00Z',
+        isCurrentUser: false,
+        type: 'text',
+      },
+      {
+        id: '6',
+        sender: 'Alex Johnson',
+        content: 'Ready to serve as professional public servants. See everyone tonight!',
+        timestamp: '2024-01-14T16:00:00Z',
         isCurrentUser: false,
         type: 'text',
       },
     ],
     '2': [
       {
-        id: '4',
+        id: '7',
         sender: 'Officer Johnson',
-        content: 'Great work on the community event today. The feedback from residents was very positive.',
+        content: 'Great work on the community event today. The feedback from residents was very positive. You\'re developing into excellent professional public servants.',
         timestamp: '2024-01-14T14:15:00Z',
         isCurrentUser: false,
         type: 'text',
@@ -103,10 +138,30 @@ export default function MessagesScreen() {
     ],
     '3': [
       {
-        id: '5',
-        sender: 'Training Coordinator',
-        content: 'Don\'t forget tomorrow\'s training session at 0800 hours. Bring your gear.',
+        id: '8',
+        sender: 'Sarah Martinez',
+        content: 'Training session went well today. Keep up the excellent work as professional public servants.',
+        timestamp: '2024-01-14T13:30:00Z',
+        isCurrentUser: false,
+        type: 'text',
+      },
+    ],
+    '4': [
+      {
+        id: '9',
+        sender: 'Michael Chen',
+        content: 'Equipment check completed. Everything is ready for tonight\'s patrol.',
         timestamp: '2024-01-14T12:45:00Z',
+        isCurrentUser: false,
+        type: 'text',
+      },
+    ],
+    '5': [
+      {
+        id: '10',
+        sender: 'Emma Thompson',
+        content: 'See you at tonight\'s patrol. Remember to bring your gear and maintain our standards as professional public servants.',
+        timestamp: '2024-01-14T11:20:00Z',
         isCurrentUser: false,
         type: 'text',
       },
@@ -147,7 +202,7 @@ export default function MessagesScreen() {
   const startNewConversation = () => {
     Alert.alert(
       'New Conversation',
-      'Select contacts to start a new conversation',
+      'Select contacts from the roster to start a new conversation',
       [{ text: 'OK', onPress: () => console.log('Start new conversation') }]
     );
   };
@@ -172,7 +227,10 @@ export default function MessagesScreen() {
                 {conversation?.name}
               </Text>
               <Text style={[styles.chatHeaderStatus, { color: colors.textSecondary }]}>
-                {conversation?.isGroup ? 'Group Chat' : 'Online'}
+                {conversation?.isGroup ? 
+                  `Group Chat • ${conversation.participants?.length || 'Multiple'} members` : 
+                  'Online'
+                }
               </Text>
             </View>
             <Pressable style={styles.chatHeaderAction}>
@@ -194,10 +252,11 @@ export default function MessagesScreen() {
                 key={message.id}
                 style={[
                   styles.messageContainer,
+                  message.type === 'system' ? styles.systemMessage :
                   message.isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage
                 ]}
               >
-                {!message.isCurrentUser && (
+                {!message.isCurrentUser && message.type !== 'system' && (
                   <Text style={[styles.messageSender, { color: colors.textSecondary }]}>
                     {message.sender}
                   </Text>
@@ -205,18 +264,22 @@ export default function MessagesScreen() {
                 <GlassView
                   style={[
                     styles.messageBubble,
+                    message.type === 'system' ? styles.systemBubble :
                     message.isCurrentUser ? styles.currentUserBubble : styles.otherUserBubble,
                     Platform.OS !== 'ios' && {
-                      backgroundColor: message.isCurrentUser 
-                        ? colors.primary 
-                        : 'rgba(255,255,255,0.9)'
+                      backgroundColor: message.type === 'system' ? colors.secondary :
+                        message.isCurrentUser ? colors.primary : 'rgba(255,255,255,0.9)'
                     }
                   ]}
                   glassEffectStyle="regular"
                 >
                   <Text style={[
                     styles.messageText,
-                    { color: message.isCurrentUser ? 'white' : colors.text }
+                    { 
+                      color: message.type === 'system' ? colors.text :
+                        message.isCurrentUser ? 'white' : colors.text,
+                      fontStyle: message.type === 'system' ? 'italic' : 'normal'
+                    }
                   ]}>
                     {message.content}
                   </Text>
@@ -278,6 +341,15 @@ export default function MessagesScreen() {
           </Pressable>
         </View>
 
+        {/* Info Banner */}
+        <View style={[commonStyles.card, styles.infoBanner]}>
+          <IconSymbol name="info.circle.fill" color={colors.primary} size={20} />
+          <Text style={[styles.infoBannerText, { color: colors.text }]}>
+            All registered explorers are automatically added to the Explorer Group Chat. 
+            Use the roster to start direct messages with individual explorers.
+          </Text>
+        </View>
+
         {/* Conversations List */}
         <View style={styles.conversationsList}>
           {conversations.map((conversation) => (
@@ -286,10 +358,13 @@ export default function MessagesScreen() {
               onPress={() => setActiveConversation(conversation.id)}
               style={[commonStyles.card, styles.conversationCard]}
             >
-              <View style={styles.conversationAvatar}>
+              <View style={[
+                styles.conversationAvatar,
+                conversation.id === 'explorer-group' && { backgroundColor: colors.primary }
+              ]}>
                 <IconSymbol 
                   name={conversation.isGroup ? "person.3.fill" : "person.fill"} 
-                  color={colors.primary} 
+                  color={conversation.id === 'explorer-group' ? 'white' : colors.primary} 
                   size={24} 
                 />
               </View>
@@ -297,6 +372,9 @@ export default function MessagesScreen() {
                 <View style={styles.conversationHeader}>
                   <Text style={[styles.conversationName, { color: colors.text }]}>
                     {conversation.name}
+                    {conversation.id === 'explorer-group' && (
+                      <Text style={[styles.groupBadge, { color: colors.primary }]}> • Official</Text>
+                    )}
                   </Text>
                   <Text style={[styles.conversationTime, { color: colors.textSecondary }]}>
                     {formatTimestamp(conversation.timestamp)}
@@ -349,6 +427,18 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     borderWidth: 1,
   },
+  infoBanner: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 24,
+    backgroundColor: colors.backgroundAlt,
+    gap: 12,
+  },
+  infoBannerText: {
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
+  },
   conversationsList: {
     flex: 1,
   },
@@ -379,6 +469,11 @@ const styles = StyleSheet.create({
   conversationName: {
     fontSize: 16,
     fontWeight: '600',
+    flex: 1,
+  },
+  groupBadge: {
+    fontSize: 12,
+    fontWeight: '500',
   },
   conversationTime: {
     fontSize: 12,
@@ -450,6 +545,9 @@ const styles = StyleSheet.create({
   otherUserMessage: {
     alignItems: 'flex-start',
   },
+  systemMessage: {
+    alignItems: 'center',
+  },
   messageSender: {
     fontSize: 12,
     marginBottom: 4,
@@ -466,6 +564,10 @@ const styles = StyleSheet.create({
   },
   otherUserBubble: {
     backgroundColor: colors.card,
+  },
+  systemBubble: {
+    backgroundColor: colors.secondary,
+    maxWidth: '90%',
   },
   messageText: {
     fontSize: 16,

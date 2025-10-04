@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Platform, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable, TextInput, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconSymbol } from '@/components/IconSymbol';
 import { GlassView } from 'expo-glass-effect';
 import { colors, commonStyles } from '@/styles/commonStyles';
+import { useRouter } from 'expo-router';
 
 interface Explorer {
   id: string;
@@ -22,6 +23,7 @@ interface Explorer {
 export default function RosterScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'probationary' | 'inactive'>('all');
+  const router = useRouter();
 
   const explorers: Explorer[] = [
     {
@@ -186,6 +188,38 @@ export default function RosterScreen() {
     });
   };
 
+  const startDirectMessage = (explorer: Explorer) => {
+    Alert.alert(
+      'Direct Message',
+      `Start a conversation with ${explorer.name}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Message', 
+          onPress: () => {
+            console.log(`Starting direct message with ${explorer.name}`);
+            // In a real app, this would navigate to the messages screen with a new conversation
+            router.push('/(tabs)/messages');
+          }
+        }
+      ]
+    );
+  };
+
+  const callExplorer = (explorer: Explorer) => {
+    Alert.alert(
+      'Call Explorer',
+      `Call ${explorer.name} at ${explorer.phone}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Call', 
+          onPress: () => console.log(`Calling ${explorer.name} at ${explorer.phone}`)
+        }
+      ]
+    );
+  };
+
   const renderExplorer = (explorer: Explorer) => (
     <View key={explorer.id} style={[commonStyles.card, styles.explorerCard]}>
       <View style={styles.explorerHeader}>
@@ -257,6 +291,25 @@ export default function RosterScreen() {
             </View>
           </View>
         )}
+        
+        {/* Action Buttons */}
+        <View style={styles.actionButtons}>
+          <Pressable
+            onPress={() => startDirectMessage(explorer)}
+            style={[styles.actionButton, { backgroundColor: colors.primary }]}
+          >
+            <IconSymbol name="message.fill" color="white" size={16} />
+            <Text style={styles.actionButtonText}>Message</Text>
+          </Pressable>
+          
+          <Pressable
+            onPress={() => callExplorer(explorer)}
+            style={[styles.actionButton, { backgroundColor: colors.success }]}
+          >
+            <IconSymbol name="phone.fill" color="white" size={16} />
+            <Text style={styles.actionButtonText}>Call</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -299,7 +352,7 @@ export default function RosterScreen() {
             Explorer Roster
           </Text>
           <Text style={[commonStyles.textSecondary, { textAlign: 'center' }]}>
-            All Daytona Beach Police Explorers
+            All Daytona Beach Police Explorers serving as professional public servants
           </Text>
         </View>
 
@@ -339,6 +392,15 @@ export default function RosterScreen() {
               </Pressable>
             ))}
           </View>
+        </View>
+
+        {/* Info Banner */}
+        <View style={[commonStyles.card, styles.infoBanner]}>
+          <IconSymbol name="info.circle.fill" color={colors.primary} size={20} />
+          <Text style={[styles.infoBannerText, { color: colors.text }]}>
+            Tap "Message" next to any explorer to start a direct conversation. 
+            All explorers are automatically added to the main Explorer Group Chat.
+          </Text>
         </View>
 
         {/* Statistics */}
@@ -416,7 +478,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   searchContainer: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   searchInputContainer: {
     flexDirection: 'row',
@@ -446,6 +508,18 @@ const styles = StyleSheet.create({
   filterButtonText: {
     fontSize: 12,
     fontWeight: '600',
+  },
+  infoBanner: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 24,
+    backgroundColor: colors.backgroundAlt,
+    gap: 12,
+  },
+  infoBannerText: {
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
   },
   statsContainer: {
     flexDirection: 'row',
@@ -558,6 +632,26 @@ const styles = StyleSheet.create({
   },
   specializationText: {
     fontSize: 10,
+    fontWeight: '600',
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 16,
+  },
+  actionButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    gap: 6,
+  },
+  actionButtonText: {
+    color: 'white',
+    fontSize: 14,
     fontWeight: '600',
   },
   emptyState: {
