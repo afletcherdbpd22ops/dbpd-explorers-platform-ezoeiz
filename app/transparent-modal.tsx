@@ -1,46 +1,56 @@
-import { StyleSheet, Text, Pressable } from 'react-native';
+
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { router } from 'expo-router';
-import { GlassView } from 'expo-glass-effect';
 import { useTheme } from '@react-navigation/native';
+import { GlassView } from 'expo-glass-effect';
+import { colors, commonStyles } from '@/styles/commonStyles';
 
 export default function TransparentModal() {
   const theme = useTheme();
 
   return (
-    <Pressable style={styles.backdrop} onPress={() => router.back()}>
-      <Pressable onPress={(e) => e.stopPropagation()}>
-        <GlassView style={styles.modal} glassEffectStyle="regular">
-          <Text style={[styles.title, { color: theme.colors.text }]}>Transparent Modal</Text>
-          <Text style={[styles.text, { color: theme.colors.text }]}>Tap outside to dismiss</Text>
-        </GlassView>
-      </Pressable>
-    </Pressable>
+    <View style={[styles.container, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
+      <GlassView style={styles.modal} glassEffectStyle="regular">
+        <Text style={[commonStyles.title, { color: colors.text, marginBottom: 20 }]}>
+          Transparent Modal
+        </Text>
+        <Text style={[commonStyles.text, { color: colors.textSecondary, textAlign: 'center', marginBottom: 30 }]}>
+          This is a transparent modal that allows the background to show through with a blur effect.
+        </Text>
+        <Pressable
+          style={[styles.button, { backgroundColor: colors.primary }]}
+          onPress={() => router.back()}
+        >
+          <Text style={[styles.buttonText, { color: 'white' }]}>Close</Text>
+        </Pressable>
+      </GlassView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
+  container: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
   },
   modal: {
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: 20,
+    padding: 30,
     alignItems: 'center',
-    minWidth: 200,
+    maxWidth: 300,
+    width: '100%',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    // color handled dynamically
+  button: {
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    borderRadius: 25,
+    minWidth: 120,
+    alignItems: 'center',
   },
-  text: {
+  buttonText: {
     fontSize: 16,
-    textAlign: 'center',
-    // color handled dynamically
+    fontWeight: '600',
   },
 });

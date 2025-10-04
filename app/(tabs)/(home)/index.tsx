@@ -1,161 +1,270 @@
+
 import React from "react";
-import { Stack, Link } from "expo-router";
-import { FlatList, Pressable, StyleSheet, View, Text, Alert, Platform } from "react-native";
+import { Stack } from "expo-router";
+import { ScrollView, StyleSheet, View, Text, Pressable, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
 import { GlassView } from "expo-glass-effect";
 import { useTheme } from "@react-navigation/native";
-
-const ICON_COLOR = "#007AFF";
+import { colors, commonStyles } from "@/styles/commonStyles";
 
 export default function HomeScreen() {
   const theme = useTheme();
-  const modalDemos = [
+
+  const quickActions = [
     {
-      title: "Standard Modal",
-      description: "Full screen modal presentation",
-      route: "/modal",
-      color: "#007AFF",
+      title: "Check In",
+      description: "Mark your attendance",
+      icon: "checkmark.circle.fill",
+      color: colors.success,
+      action: () => console.log("Check in pressed"),
     },
     {
-      title: "Form Sheet",
-      description: "Bottom sheet with detents and grabber",
-      route: "/formsheet",
-      color: "#34C759",
+      title: "Emergency Alert",
+      description: "Send emergency notification",
+      icon: "exclamationmark.triangle.fill",
+      color: colors.error,
+      action: () => console.log("Emergency alert pressed"),
     },
     {
-      title: "Transparent Modal",
-      description: "Overlay without obscuring background",
-      route: "/transparent-modal",
-      color: "#FF9500",
-    }
+      title: "Quick Message",
+      description: "Send a quick message",
+      icon: "message.fill",
+      color: colors.primary,
+      action: () => console.log("Quick message pressed"),
+    },
+    {
+      title: "View Schedule",
+      description: "Check today's schedule",
+      icon: "calendar",
+      color: colors.accent,
+      action: () => console.log("View schedule pressed"),
+    },
   ];
 
-  const renderModalDemo = ({ item }: { item: (typeof modalDemos)[0] }) => (
-    <GlassView style={[
-      styles.demoCard,
-      Platform.OS !== 'ios' && { backgroundColor: theme.dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
-    ]} glassEffectStyle="regular">
-      <View style={[styles.demoIcon, { backgroundColor: item.color }]}>
-        <IconSymbol name="square.grid.3x3" color="white" size={24} />
+  const recentAnnouncements = [
+    {
+      id: 1,
+      title: "Training Session Tomorrow",
+      content: "Mandatory training session at 0800 hours. Bring your uniform and notebook.",
+      time: "2 hours ago",
+      priority: "high",
+    },
+    {
+      id: 2,
+      title: "Community Event This Weekend",
+      content: "Volunteer opportunity at the local community center. Sign up required.",
+      time: "5 hours ago",
+      priority: "medium",
+    },
+    {
+      id: 3,
+      title: "Equipment Check",
+      content: "All explorers must complete equipment check by Friday.",
+      time: "1 day ago",
+      priority: "low",
+    },
+  ];
+
+  const renderQuickAction = (action: typeof quickActions[0], index: number) => (
+    <Pressable key={index} onPress={action.action} style={styles.quickActionButton}>
+      <GlassView style={[
+        styles.quickAction,
+        Platform.OS !== 'ios' && { backgroundColor: 'rgba(255,255,255,0.9)' }
+      ]} glassEffectStyle="regular">
+        <View style={[styles.quickActionIcon, { backgroundColor: action.color }]}>
+          <IconSymbol name={action.icon as any} color="white" size={24} />
+        </View>
+        <Text style={[styles.quickActionTitle, { color: colors.text }]}>{action.title}</Text>
+        <Text style={[styles.quickActionDescription, { color: colors.textSecondary }]}>
+          {action.description}
+        </Text>
+      </GlassView>
+    </Pressable>
+  );
+
+  const renderAnnouncement = (announcement: typeof recentAnnouncements[0]) => (
+    <View key={announcement.id} style={[commonStyles.card, styles.announcementCard]}>
+      <View style={styles.announcementHeader}>
+        <Text style={[styles.announcementTitle, { color: colors.text }]}>
+          {announcement.title}
+        </Text>
+        <View style={[
+          styles.priorityBadge,
+          { backgroundColor: announcement.priority === 'high' ? colors.error : 
+                            announcement.priority === 'medium' ? colors.warning : colors.success }
+        ]}>
+          <Text style={styles.priorityText}>{announcement.priority.toUpperCase()}</Text>
+        </View>
       </View>
-      <View style={styles.demoContent}>
-        <Text style={[styles.demoTitle, { color: theme.colors.text }]}>{item.title}</Text>
-        <Text style={[styles.demoDescription, { color: theme.dark ? '#98989D' : '#666' }]}>{item.description}</Text>
-      </View>
-      <Link href={item.route as any} asChild>
-        <Pressable>
-          <GlassView style={[
-            styles.tryButton,
-            Platform.OS !== 'ios' && { backgroundColor: theme.dark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)' }
-          ]} glassEffectStyle="clear">
-            <Text style={[styles.tryButtonText, { color: theme.colors.primary }]}>Try It</Text>
-          </GlassView>
-        </Pressable>
-      </Link>
-    </GlassView>
+      <Text style={[styles.announcementContent, { color: colors.textSecondary }]}>
+        {announcement.content}
+      </Text>
+      <Text style={[styles.announcementTime, { color: colors.textSecondary }]}>
+        {announcement.time}
+      </Text>
+    </View>
   );
 
   const renderHeaderRight = () => (
     <Pressable
-      onPress={() => Alert.alert("Not Implemented", "This feature is not implemented yet")}
-      style={styles.headerButtonContainer}
+      onPress={() => console.log("Notifications pressed")}
+      style={[commonStyles.headerButton, { backgroundColor: colors.card }]}
     >
-      <IconSymbol name="plus" color={theme.colors.primary} />
+      <IconSymbol name="bell.fill" color={colors.primary} size={20} />
     </Pressable>
   );
 
   const renderHeaderLeft = () => (
     <Pressable
-      onPress={() => Alert.alert("Not Implemented", "This feature is not implemented yet")}
-      style={styles.headerButtonContainer}
+      onPress={() => console.log("Menu pressed")}
+      style={[commonStyles.headerButton, { backgroundColor: colors.card }]}
     >
-      <IconSymbol
-        name="gear"
-        color={theme.colors.primary}
-      />
+      <IconSymbol name="line.horizontal.3" color={colors.primary} size={20} />
     </Pressable>
   );
 
   return (
-    <>
+    <SafeAreaView style={[commonStyles.wrapper]} edges={['top']}>
       {Platform.OS === 'ios' && (
         <Stack.Screen
           options={{
-            title: "Building the app...",
+            title: "Daytona Beach Police Explorers",
             headerRight: renderHeaderRight,
             headerLeft: renderHeaderLeft,
+            headerStyle: { backgroundColor: colors.background },
+            headerTintColor: colors.text,
           }}
         />
       )}
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <FlatList
-          data={modalDemos}
-          renderItem={renderModalDemo}
-          keyExtractor={(item) => item.route}
-          contentContainerStyle={[
-            styles.listContainer,
-            Platform.OS !== 'ios' && styles.listContainerWithTabBar
-          ]}
-          contentInsetAdjustmentBehavior="automatic"
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-    </>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={[
+          styles.contentContainer,
+          Platform.OS !== 'ios' && styles.contentContainerWithTabBar
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Welcome Section */}
+        <View style={styles.welcomeSection}>
+          <Text style={[commonStyles.title, { color: colors.text }]}>
+            Welcome, Explorer!
+          </Text>
+          <Text style={[commonStyles.textSecondary, { textAlign: 'center' }]}>
+            Ready to serve and protect our community
+          </Text>
+        </View>
+
+        {/* Quick Actions */}
+        <View style={styles.section}>
+          <Text style={[commonStyles.subtitle, { color: colors.text, marginBottom: 16 }]}>
+            Quick Actions
+          </Text>
+          <View style={styles.quickActionsGrid}>
+            {quickActions.map(renderQuickAction)}
+          </View>
+        </View>
+
+        {/* Recent Announcements */}
+        <View style={styles.section}>
+          <Text style={[commonStyles.subtitle, { color: colors.text, marginBottom: 16 }]}>
+            Recent Announcements
+          </Text>
+          {recentAnnouncements.map(renderAnnouncement)}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor handled dynamically
+    backgroundColor: colors.background,
   },
-  listContainer: {
+  contentContainer: {
+    paddingHorizontal: 20,
     paddingVertical: 16,
-    paddingHorizontal: 16,
   },
-  listContainerWithTabBar: {
+  contentContainerWithTabBar: {
     paddingBottom: 100, // Extra padding for floating tab bar
   },
-  demoCard: {
+  welcomeSection: {
+    alignItems: 'center',
+    marginBottom: 32,
+    paddingVertical: 20,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  quickActionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  quickActionButton: {
+    width: '48%',
+    marginBottom: 12,
+  },
+  quickAction: {
     borderRadius: 12,
     padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
     alignItems: 'center',
+    minHeight: 120,
+    justifyContent: 'center',
   },
-  demoIcon: {
+  quickActionIcon: {
     width: 48,
     height: 48,
     borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginBottom: 12,
   },
-  demoContent: {
-    flex: 1,
-  },
-  demoTitle: {
-    fontSize: 18,
+  quickActionTitle: {
+    fontSize: 16,
     fontWeight: '600',
+    textAlign: 'center',
     marginBottom: 4,
-    // color handled dynamically
   },
-  demoDescription: {
-    fontSize: 14,
-    lineHeight: 18,
-    // color handled dynamically
+  quickActionDescription: {
+    fontSize: 12,
+    textAlign: 'center',
+    lineHeight: 16,
   },
-  headerButtonContainer: {
-    padding: 6,
+  announcementCard: {
+    marginBottom: 12,
   },
-  tryButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 6,
+  announcementHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 8,
   },
-  tryButtonText: {
-    fontSize: 14,
+  announcementTitle: {
+    fontSize: 16,
     fontWeight: '600',
-    // color handled dynamically
+    flex: 1,
+    marginRight: 12,
+  },
+  priorityBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  priorityText: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: '700',
+  },
+  announcementContent: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  announcementTime: {
+    fontSize: 12,
+    fontStyle: 'italic',
   },
 });
