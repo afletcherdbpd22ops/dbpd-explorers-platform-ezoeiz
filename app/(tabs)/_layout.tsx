@@ -24,13 +24,13 @@ export default function TabLayout() {
     {
       name: 'roster',
       route: '/(tabs)/roster',
-      icon: 'person.3.fill',
+      icon: 'person.2.fill',
       label: 'Roster',
     },
     {
       name: 'announcements',
       route: '/(tabs)/announcements',
-      icon: 'megaphone.fill',
+      icon: 'bell.fill',
       label: 'Announcements',
     },
     {
@@ -42,13 +42,13 @@ export default function TabLayout() {
     {
       name: 'walkie',
       route: '/(tabs)/walkie',
-      icon: 'radio',
+      icon: 'antenna.radiowaves.left.and.right',
       label: 'Walkie',
     },
     {
       name: 'profile',
       route: '/(tabs)/profile',
-      icon: 'person.fill',
+      icon: 'person.circle.fill',
       label: 'Profile',
     },
   ];
@@ -66,11 +66,11 @@ export default function TabLayout() {
           <Label>Calendar</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="roster">
-          <Icon sf="person.3.fill" drawable="ic_roster" />
+          <Icon sf="person.2.fill" drawable="ic_roster" />
           <Label>Roster</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="announcements">
-          <Icon sf="megaphone.fill" drawable="ic_announcements" />
+          <Icon sf="bell.fill" drawable="ic_announcements" />
           <Label>Announcements</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="messages">
@@ -78,11 +78,11 @@ export default function TabLayout() {
           <Label>Messages</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="walkie">
-          <Icon sf="radio" drawable="ic_walkie" />
+          <Icon sf="antenna.radiowaves.left.and.right" drawable="ic_walkie" />
           <Label>Walkie</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="profile">
-          <Icon sf="person.fill" drawable="ic_profile" />
+          <Icon sf="person.circle.fill" drawable="ic_profile" />
           <Label>Profile</Label>
         </NativeTabs.Trigger>
       </NativeTabs>
