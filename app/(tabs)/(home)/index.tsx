@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Stack } from "expo-router";
-import { ScrollView, StyleSheet, View, Text, Pressable, Platform } from "react-native";
+import { ScrollView, StyleSheet, View, Text, Pressable, Platform, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
 import { GlassView } from "expo-glass-effect";
@@ -145,13 +145,23 @@ export default function HomeScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Welcome Section */}
+        {/* Welcome Section with Logo */}
         <View style={styles.welcomeSection}>
-          <Text style={[commonStyles.title, { color: colors.text }]}>
+          <View style={styles.logoContainer}>
+            <Image 
+              source={require('@/assets/images/c794ccc5-d3ca-4b99-a5c4-5d9a81f3722f.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
+          <Text style={[commonStyles.title, { color: colors.text, marginTop: 16 }]}>
             Daytona Beach Police Explorers
           </Text>
-          <Text style={[commonStyles.textSecondary, { textAlign: 'center' }]}>
+          <Text style={[commonStyles.textSecondary, { textAlign: 'center', marginTop: 8 }]}>
             Ready to serve and protect our community
+          </Text>
+          <Text style={[styles.missionStatement, { color: colors.textSecondary, textAlign: 'center', marginTop: 12 }]}>
+            Professional Public Servant
           </Text>
         </View>
 
@@ -193,6 +203,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
     paddingVertical: 20,
+  },
+  logoContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: colors.card,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  missionStatement: {
+    fontSize: 16,
+    fontWeight: '500',
+    fontStyle: 'italic',
   },
   section: {
     marginBottom: 32,
